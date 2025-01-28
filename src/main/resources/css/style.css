@@ -1,0 +1,13 @@
+/*lets_start*/
+.bottom_format {
+    -fx-background-radius: 30px;
+    -fx-border-radius: 150;
+    -fx-cursor:hand;
+}
+.bottom_format:pressed{
+	-fx-scale-x:0.95;
+	-fx-scale-y:0.95;
+}
+.bottom_format:hover{
+	
+}
