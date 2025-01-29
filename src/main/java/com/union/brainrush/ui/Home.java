@@ -4,14 +4,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 @Component
@@ -20,8 +24,16 @@ public class Home {
 	StackPane root;
 	Scene scene;
 
-	// Create the VBox
+	// Create the StackPane (rightmost part)
+	StackPane rightPane;
+	ImageView infoImage;
+
+	// Create the VBox (middle part)
 	VBox vBox;
+
+	// Create the StackPane (leftmost part)
+	StackPane leftPane;
+	ImageView uniImage;
 
 	// Create top slot (titleImage)
 	ImageView titleImage;
@@ -29,13 +41,14 @@ public class Home {
 
 	// Create second slot (Label)
 	Label label;
-	Font small_font;
+	Font label_small_font;
 
 	// Create third slots (for 3 Buttons)
 	StackPane stackpane1;
 	StackPane stackpane2;
 	StackPane stackpane3;
-
+	Font button_small_font;
+	
 	// 3 Buttons
 	Button firstPlayerButton;
 	Button secondPlayerButton;
@@ -43,6 +56,47 @@ public class Home {
 
 	@Autowired
 	public Home() {
+		 // Overlay StackPane
+        StackPane overlayPane = new StackPane();
+        Rectangle overlay = new Rectangle();
+        overlay.setFill(Color.BLACK); // Black color
+        overlay.setOpacity(0.5); // Adjust opacity for dimming
+        
+        overlayPane.getChildren().add(overlay);
+		// Right Layout
+		rightPart();
+
+		// Middle Layout
+		middlePart();
+
+		// Left Layout
+		leftPart();
+
+		// Create the root StackPane
+		root = new StackPane(overlayPane,rightPane, vBox, leftPane);
+		scene = new Scene(root, UiConstant.WIDTH, UiConstant.HEIGHT);
+		scene.getStylesheets().add("css/style.css");
+		rightPane.maxWidthProperty().bind(scene.widthProperty().divide(3));
+		vBox.maxWidthProperty().bind(scene.widthProperty().divide(3));
+		leftPane.maxWidthProperty().bind(scene.widthProperty().divide(3));
+		overlay.widthProperty().bind(root.widthProperty());
+        overlay.heightProperty().bind(root.heightProperty());
+		// Responsive
+		responsive();
+		smallImageSize();
+	}
+
+	private void rightPart() {
+		// Rightmost part
+		rightPane = new StackPane();
+		StackPane.setAlignment(rightPane, Pos.CENTER_RIGHT);
+
+		// Create info image
+		infoImage = new ImageView(new Image("images/home/infoImage.png"));
+		rightPane.getChildren().add(infoImage);
+	}
+
+	private void middlePart() {
 		// Create the VBox
 		vBox = new VBox();
 
@@ -50,9 +104,7 @@ public class Home {
 		double[] proportions = { 3.0 / 10, 1.0 / 10, 2.0 / 10, 2.0 / 10, 2.0 / 10 };
 
 		// Create title image
-		titleImage = new ImageView(new Image("images/title/BrainRushTitle.png"));
-		titleImage.setFitHeight(200);
-		titleImage.setFitWidth(300);
+		titleImage = new ImageView(new Image("images/home/title/BrainRushTitle.png"));
 
 		// Create top slot (titleImage)
 		imagelayout = new StackPane();
@@ -60,8 +112,8 @@ public class Home {
 
 		// Create second slot (Label)
 		label = new Label("ဘယ်နှစ်ယောက်ကစားမှာလဲ..?");
-		small_font = Font.loadFont(getClass().getResourceAsStream(UiConstant.NOTO_REGULAR_PATH), 25);
-		label.setFont(small_font);
+		label_small_font = Font.loadFont(getClass().getResourceAsStream(UiConstant.NOTO_REGULAR_PATH), 25);
+		label.setFont(label_small_font);
 		label.setStyle("-fx-alignment: center;");
 		label.setMaxWidth(Double.MAX_VALUE);
 		label.setMaxHeight(Double.MAX_VALUE);
@@ -75,14 +127,23 @@ public class Home {
 		firstPlayerButton = new Button("တစ်ယောက်");
 		secondPlayerButton = new Button("နှစ်ယောက်");
 		thirdPlayerButton = new Button("သုံးယောက်");
-
+		
+		// Font for buttons
+		button_small_font = Font.loadFont(getClass().getResourceAsStream(UiConstant.NOTO_REGULAR_PATH), 19);
+		
+		// Color for buttons
+		firstPlayerButton.setStyle("-fx-background-color:#f97e04;");
+		secondPlayerButton.setStyle("-fx-background-color:#a7a3a8");
+		thirdPlayerButton.setStyle("-fx-background-color:#34724a");
+		
 		// Looping array
 		StackPane[] stackpanes = { stackpane1, stackpane2, stackpane3 };
 		Button[] buttons = { firstPlayerButton, secondPlayerButton, thirdPlayerButton };
 
 		int index = 0;
 		for (StackPane stackpane : stackpanes) {
-
+			buttons[index].setTextFill(Color.WHITE);
+			buttons[index].setFont(button_small_font);
 			buttons[index].getStyleClass().add("bottom_format");
 			stackpane.getChildren().add(buttons[index]);
 
@@ -109,13 +170,18 @@ public class Home {
 			}
 		}
 
-		// Create the root StackPane
-		root = new StackPane(vBox);
-		scene = new Scene(root, UiConstant.WIDTH, UiConstant.HEIGHT);
-		scene.getStylesheets().add("css/style.css");
-		vBox.maxWidthProperty().bind(scene.widthProperty().divide(3));
-		// Responsive
-		responsive();
+	}
+
+	private void leftPart() {
+		// Leftmost part
+		leftPane = new StackPane();
+		StackPane.setAlignment(leftPane, Pos.CENTER_LEFT);
+
+		// Create uni image
+		uniImage = new ImageView(new Image("images/home/uniImage.png"));
+
+		leftPane.getChildren().add(uniImage);
+
 	}
 
 	private void responsive() {
@@ -124,29 +190,44 @@ public class Home {
 
 			if (width > 1024 && width <= 1440) {
 				// Medium Screen
-				
+
+				// InfoImage transform
+				infoImage.setFitHeight(220);
+				infoImage.setFitWidth(220);
+
 				// TitleImage transform
 				StackPane.setMargin(titleImage, new Insets(0, 60, 0, 0));
 				titleImage.setFitHeight(250);
 				titleImage.setFitWidth(350);
-				
+
 				// Label font size
 				Font medium_font = Font.loadFont(getClass().getResourceAsStream(UiConstant.NOTO_REGULAR_PATH), 30);
 				label.setFont(medium_font);
+
+				// UniImage transform
+				uniImage.setFitHeight(200);
+				uniImage.setFitWidth(170);
+
 			} else if (width > 1440) {
 				// Large Screen
-				
+
 				// TitleImage transform
 				titleImage.setFitHeight(300);
 				titleImage.setFitWidth(400);
 			} else {
 				// Small Screen
-				
-				// TitleImage transform
-				titleImage.setFitHeight(200);
-				titleImage.setFitWidth(300);
+				smallImageSize();
 			}
 		});
+	}
+
+	private void smallImageSize() {
+		infoImage.setFitHeight(170);
+		infoImage.setFitWidth(170);
+		titleImage.setFitHeight(200);
+		titleImage.setFitWidth(300);
+		uniImage.setFitHeight(150);
+		uniImage.setFitWidth(120);
 	}
 
 	public Scene getScene() {
