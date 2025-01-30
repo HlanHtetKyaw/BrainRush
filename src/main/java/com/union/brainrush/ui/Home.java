@@ -1,6 +1,8 @@
 package com.union.brainrush.ui;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javafx.geometry.Insets;
@@ -10,12 +12,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 @Component
@@ -48,39 +48,46 @@ public class Home {
 	StackPane stackpane2;
 	StackPane stackpane3;
 	Font button_small_font;
-	
+
 	// 3 Buttons
 	Button firstPlayerButton;
 	Button secondPlayerButton;
 	Button thirdPlayerButton;
-
+	
+	@Autowired
+	@Lazy
+	TransitionState transitionState;
+	
 	@Autowired
 	public Home() {
-		 // Overlay StackPane
-        StackPane overlayPane = new StackPane();
-        Rectangle overlay = new Rectangle();
-        overlay.setFill(Color.BLACK); // Black color
-        overlay.setOpacity(0.5); // Adjust opacity for dimming
-        
-        overlayPane.getChildren().add(overlay);
+		
 		// Right Layout
 		rightPart();
 
 		// Middle Layout
 		middlePart();
 
+		// Buttons Action
+		firstPlayerButton.setOnAction(e -> {
+			buttonsAction(1);
+		});
+		secondPlayerButton.setOnAction(e -> {
+			buttonsAction(2);
+		});
+		thirdPlayerButton.setOnAction(e -> {
+			buttonsAction(3);
+		});
 		// Left Layout
 		leftPart();
 
 		// Create the root StackPane
-		root = new StackPane(overlayPane,rightPane, vBox, leftPane);
+		root = new StackPane(rightPane, vBox, leftPane);
 		scene = new Scene(root, UiConstant.WIDTH, UiConstant.HEIGHT);
 		scene.getStylesheets().add("css/style.css");
 		rightPane.maxWidthProperty().bind(scene.widthProperty().divide(3));
 		vBox.maxWidthProperty().bind(scene.widthProperty().divide(3));
 		leftPane.maxWidthProperty().bind(scene.widthProperty().divide(3));
-		overlay.widthProperty().bind(root.widthProperty());
-        overlay.heightProperty().bind(root.heightProperty());
+		
 		// Responsive
 		responsive();
 		smallImageSize();
@@ -127,15 +134,15 @@ public class Home {
 		firstPlayerButton = new Button("တစ်ယောက်");
 		secondPlayerButton = new Button("နှစ်ယောက်");
 		thirdPlayerButton = new Button("သုံးယောက်");
-		
+
 		// Font for buttons
 		button_small_font = Font.loadFont(getClass().getResourceAsStream(UiConstant.NOTO_REGULAR_PATH), 19);
-		
+
 		// Color for buttons
 		firstPlayerButton.setStyle("-fx-background-color:#f97e04;");
 		secondPlayerButton.setStyle("-fx-background-color:#a7a3a8");
 		thirdPlayerButton.setStyle("-fx-background-color:#34724a");
-		
+
 		// Looping array
 		StackPane[] stackpanes = { stackpane1, stackpane2, stackpane3 };
 		Button[] buttons = { firstPlayerButton, secondPlayerButton, thirdPlayerButton };
@@ -184,6 +191,18 @@ public class Home {
 
 	}
 
+	private void smallImageSize() {
+		infoImage.setFitHeight(170);
+		infoImage.setFitWidth(170);
+		titleImage.setFitHeight(200);
+		titleImage.setFitWidth(300);
+		uniImage.setFitHeight(150);
+		uniImage.setFitWidth(120);
+	}
+	private void buttonsAction(int mode) {
+	    transitionState.showTransitionState(mode, "အဆင်သင့်ပြင်ထားနော်",root);
+	}
+
 	private void responsive() {
 		scene.widthProperty().addListener((observable, oldValue, newValue) -> {
 			double width = newValue.doubleValue();
@@ -219,15 +238,6 @@ public class Home {
 				smallImageSize();
 			}
 		});
-	}
-
-	private void smallImageSize() {
-		infoImage.setFitHeight(170);
-		infoImage.setFitWidth(170);
-		titleImage.setFitHeight(200);
-		titleImage.setFitWidth(300);
-		uniImage.setFitHeight(150);
-		uniImage.setFitWidth(120);
 	}
 
 	public Scene getScene() {
