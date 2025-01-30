@@ -40,7 +40,7 @@ public class First {
 	        label.setPadding(new Insets(10));
 
 	        // Add a background color
-	        label.setStyle(label.getStyle() + "-fx-background-color: #f0f0f0; -fx-border-color: #cccccc; -fx-border-width: 1;");
+	        label.setStyle(label.getStyle() + "");
 	        panel1.setAlignment(Pos.CENTER);
 	        panel1.getChildren().add(label);
 	        panel1.setMaxSize(400, 400);
