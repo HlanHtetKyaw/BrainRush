@@ -1,4 +1,22 @@
 [
-    { "id": 1, "name": "Alice", "email": "alice@example.com" },
-    { "id": 2, "name": "Bob", "email": "bob@example.com" }
+  {
+    "id": 1,
+    "question": "What is the capital of France?",
+    "ans": {
+      "A": "Berlin",
+      "B": "Madrid",
+      "C": "Paris"
+    },
+    "rightAn": "C"
+  },
+  {
+    "id": 2,
+    "question": "Which planet is known as the Red Planet?",
+    "ans": {
+      "A": "Earth",
+      "B": "Mars",
+      "C": "Jupiter"
+    },
+    "rightAn": "B"
+  }
 ]

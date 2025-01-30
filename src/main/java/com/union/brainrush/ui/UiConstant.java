@@ -10,6 +10,6 @@ public class UiConstant {
     public static final ImageView firstPlayer = new ImageView(new Image("images/player/firstPlayer.png"));
     public static final ImageView secondPlayer = new ImageView(new Image("images/player/secondPlayer.png"));
     public static final ImageView thirdPlayer = new ImageView(new Image("images/player/thirdPlayer.png"));
-    public static int playerQuantity = 3;
+    public static int playerQuantity = 0;
 }
 
