@@ -42,7 +42,10 @@ public class Question {
 		TextFlow textFlow = createTextFlow(text);
 		textFlow.setStyle("-fx-background-color: white; " + "-fx-background-radius: 20; " + "-fx-padding: 10; "
 				+ "-fx-text-wrap: true;-fx-text-alignment: center;");
-		questionPane.setBackground(Background.fill(Color.RED));
+		StackPane.setAlignment(textFlow, Pos.TOP_CENTER);
+		qBottomLayout.getChildren().add(textFlow);
+		StackPane.setAlignment(qUpperLayout, Pos.TOP_CENTER);
+		StackPane.setAlignment(qBottomLayout, Pos.BOTTOM_CENTER);
 		questionPane.getChildren().addAll(qUpperLayout,qBottomLayout);
 
 		answerPane = new StackPane();
@@ -55,6 +58,8 @@ public class Question {
 		scene = new Scene(root, 1024, 768);
 		questionPane.maxWidthProperty().bind(scene.widthProperty().multiply(6).divide(10));
 		answerPane.maxWidthProperty().bind(scene.widthProperty().multiply(4).divide(10));
+		qUpperLayout.maxHeightProperty().bind(scene.heightProperty().multiply(3).divide(10));
+		qBottomLayout.maxHeightProperty().bind(scene.heightProperty().multiply(7).divide(10));
 		scene.getStylesheets().add("css/style.css");
 	}
 
