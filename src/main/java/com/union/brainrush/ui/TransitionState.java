@@ -44,7 +44,7 @@ public class TransitionState {
 	private Label counter;
 	private Font counter_small_font;
 	private Timeline timeline;
-	private int remain_counter = 1;
+	private int remain_counter;
 
 	// Under child
 	private Label announcedLabel;
@@ -52,9 +52,12 @@ public class TransitionState {
 
 	@Autowired
 	private SceneManager sceneManager;
+	
+	@Autowired
+	private Question questionState;
 
-	public void showTransitionState(String announcedString, StackPane root) {
-
+	public void showTransitionState(String announcedString, StackPane root, boolean question) {
+		remain_counter = 1;
 		// Set the VBox's height ratios
 		double[] proportions = { 0.325, 0.35, 0.325 };
 
@@ -88,9 +91,15 @@ public class TransitionState {
 		timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
 			System.out.println(remain_counter);
 			if (remain_counter == -1) {
-				UiConstant.WIDTH=(int) overlayPane.getWidth();
-				UiConstant.HEIGHT=(int) overlayPane.getHeight();
-				sceneManager.switchToQuestion();
+				UiConstant.WIDTH = (int) overlayPane.getWidth();
+				UiConstant.HEIGHT = (int) overlayPane.getHeight();
+				if (question) {
+					questionState.questionState(true);
+					sceneManager.switchToQuestion();
+				} else {
+					questionState.questionState(false);
+					sceneManager.switchToQuestion();
+				}
 			} else {
 				counter.setText(counterText[remain_counter]);
 				remain_counter--;
@@ -132,7 +141,7 @@ public class TransitionState {
 		root.getChildren().add(overlayPane);
 		responsive();
 	}
-	
+
 	private void responsive() {
 		overlayPane.widthProperty().addListener((observable, oldValue, newValue) -> {
 			double width = newValue.doubleValue();
