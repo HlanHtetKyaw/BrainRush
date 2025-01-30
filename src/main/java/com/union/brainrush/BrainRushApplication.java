@@ -8,8 +8,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import com.union.brainrush.routing.SceneManager;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 @SpringBootApplication
@@ -35,7 +33,7 @@ public class BrainRushApplication extends Application {
 		SceneManager.initialize(primaryStage);
 
 		// Getting SceneManager class from Spring MVC
-		springContext.getBean(SceneManager.class).switchToHome();;
+		springContext.getBean(SceneManager.class).switchToHome();
 
 		// Title
 		primaryStage.setTitle("Brain Rush");
