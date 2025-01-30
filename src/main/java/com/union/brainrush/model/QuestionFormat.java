@@ -6,7 +6,7 @@ public class QuestionFormat {
 	int id;
 	String question;
 	HashMap<String, String> ans;
-	String rightAn;
+	String rightAns;
 
 	public int getId() {
 		return id;
@@ -32,12 +32,12 @@ public class QuestionFormat {
 		this.ans = ans;
 	}
 
-	public String getRightAn() {
-		return rightAn;
+	public String getRightAns() {
+		return rightAns;
 	}
 
-	public void setRightAn(String rightAn) {
-		this.rightAn = rightAn;
+	public void setRightAns(String rightAns) {
+		this.rightAns = rightAns;
 	}
 
 }

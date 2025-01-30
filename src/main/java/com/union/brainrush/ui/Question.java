@@ -35,7 +35,10 @@ public class Question {
 	private StackPane answerPane;
 	private StackPane qUpperLayout;
 	private StackPane qBottomLayout;
-
+	
+	// Button
+	private Button actionButton;
+	
 	// Player slot hBox
 	private HBox hBox;
 
@@ -65,19 +68,35 @@ public class Question {
 	QuestionService questions;
 	ArrayList<QuestionFormat> questionArray;
 	QuestionFormat question;
-	
 	int questionPointer = 0;
+	
+	@Autowired
+	@Lazy
+	TransitionState transitionState;
+	
 	@Autowired
 	public Question(QuestionService questions) {
 		this.questions = questions;
+	}
+	public void questionState(boolean shuffle) {
 		questionArray = questions.getQuestions();
-		Collections.shuffle(questionArray);
+		if(shuffle) {
+			Collections.shuffle(questionArray);
+		}
 		question = questionArray.get(questionPointer);
 		root = new StackPane();
 		
 		questionPane = new StackPane();
 		qUpperLayout = new StackPane();
 		qBottomLayout = new StackPane();
+		
+		// Button
+		actionButton = new Button();
+		actionButton.setOnAction(e->{
+			questionPointer++;
+			transitionState.showTransitionState("နောက်မေးခွန်းလာပါတော့မယ်", root,false);
+		});
+		StackPane.setAlignment(actionButton, Pos.TOP_LEFT);
 		// VBox for upperLayout
 		hBox = new HBox();
 
@@ -85,9 +104,9 @@ public class Question {
 			hBox.getChildren().add(playerSlot[i]);
 		}
 		StackPane.setAlignment(hBox, Pos.BOTTOM_CENTER);
-		qUpperLayout.getChildren().add(hBox);
+		qUpperLayout.getChildren().addAll(hBox,actionButton);
 		// label.setFont(label_small_font);
-		String text = "လက်တွေ့ရေးနိုင်ဖိုဆိုရင် လက်တွေ့ရေးကြည့်မှ ရပါမယ်၊ နောက်တစ်ခု အရေးကြီးတာက သူများရေးထားတဲ့ Code ကိုလေ့လာရပါမယ်ဗျ။";
+		String text = question.getQuestion();
 		textFlow = createTextFlow(text);
 		textFlow.getStyleClass().add("question_text_flow");
 		qBottomLayout.getChildren().add(textFlow);
@@ -113,11 +132,12 @@ public class Question {
 			each.setAlignment(Pos.CENTER);
 			StackPane.setAlignment(each, Pos.CENTER_LEFT);
 		}
-		String a = "တစ်လက်တွေ့ရေးနိုင်ဖိုဆိုရင်ရင်";
-		System.out.println(a.length());
+		String a = question.getAns().get("A");
 		TextFlow ans1 = createTextFlow(a);
-		TextFlow ans2 = createTextFlow("၁");
-		TextFlow ans3 = createTextFlow("တစ်ယောက်C");
+		String b = question.getAns().get("B");
+		TextFlow ans2 = createTextFlow(b);
+		String c = question.getAns().get("C");
+		TextFlow ans3 = createTextFlow(c);
 		TextFlow[] ans = {ans1,ans2,ans3};
 		for(TextFlow each: ans) {
 			StackPane.setAlignment(each, Pos.CENTER_LEFT);
@@ -145,7 +165,6 @@ public class Question {
 		scene.getStylesheets().add("css/style.css");
 		positionPane();
 	}
-
 	private void positionPane() {
 		hBox.setAlignment(Pos.BOTTOM_CENTER);
 		StackPane.setAlignment(textFlow, Pos.TOP_CENTER);

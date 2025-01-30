@@ -201,7 +201,7 @@ public class Home {
 	}
 	private void buttonsAction(int mode) {
 		UiConstant.playerQuantity = mode;
-	    transitionState.showTransitionState("အဆင်သင့်ပြင်ထားနော်",root);
+	    transitionState.showTransitionState("အဆင်သင့်ပြင်ထားနော်",root,true);
 	}
 
 	private void responsive() {
