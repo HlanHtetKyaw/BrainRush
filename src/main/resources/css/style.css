@@ -13,3 +13,25 @@
 .bottom_format:hover {
 	
 }
+
+.question_text_flow {
+	-fx-background-color: white;
+	-fx-background-radius: 20;
+	-fx-padding: 10;
+	-fx-text-wrap: true;
+	-fx-text-alignment: center;
+}
+
+.ABC {
+	-fx-background-color: white;
+	-fx-background-radius: 50;
+	-fx-font-weight: bold;
+}
+
+.answer {
+	-fx-background-color: white;
+	-fx-background-radius: 30;
+	-fx-text-wrap: true;
+	-fx-text-alignment: center;
+	-fx-padding: 10 0 0 0;
+}
