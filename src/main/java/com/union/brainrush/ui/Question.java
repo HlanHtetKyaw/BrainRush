@@ -1,10 +1,15 @@
 package com.union.brainrush.ui;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+
+import com.union.brainrush.model.QuestionFormat;
+import com.union.brainrush.service.QuestionService;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -56,9 +61,18 @@ public class Question {
 	Label C;
 	Font burmeseFont = Font.loadFont(getClass().getResourceAsStream(UiConstant.NOTO_REGULAR_PATH), 20);
 	Font englishFont = Font.font("Arial", 20);
-
+	
+	QuestionService questions;
+	ArrayList<QuestionFormat> questionArray;
+	QuestionFormat question;
+	
+	int questionPointer = 0;
 	@Autowired
-	public Question() {
+	public Question(QuestionService questions) {
+		this.questions = questions;
+		questionArray = questions.getQuestions();
+		Collections.shuffle(questionArray);
+		question = questionArray.get(questionPointer);
 		root = new StackPane();
 		
 		questionPane = new StackPane();
@@ -99,8 +113,9 @@ public class Question {
 			each.setAlignment(Pos.CENTER);
 			StackPane.setAlignment(each, Pos.CENTER_LEFT);
 		}
-		
-		TextFlow ans1 = createTextFlow("တစ်လက်တွေ့ရေးနိုင်ဖိုဆိုရင်");
+		String a = "တစ်လက်တွေ့ရေးနိုင်ဖိုဆိုရင်ရင်";
+		System.out.println(a.length());
+		TextFlow ans1 = createTextFlow(a);
 		TextFlow ans2 = createTextFlow("၁");
 		TextFlow ans3 = createTextFlow("တစ်ယောက်C");
 		TextFlow[] ans = {ans1,ans2,ans3};
