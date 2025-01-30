@@ -200,7 +200,8 @@ public class Home {
 		uniImage.setFitWidth(120);
 	}
 	private void buttonsAction(int mode) {
-	    transitionState.showTransitionState(mode, "အဆင်သင့်ပြင်ထားနော်",root);
+		UiConstant.playerQuantity = mode;
+	    transitionState.showTransitionState("အဆင်သင့်ပြင်ထားနော်",root);
 	}
 
 	private void responsive() {

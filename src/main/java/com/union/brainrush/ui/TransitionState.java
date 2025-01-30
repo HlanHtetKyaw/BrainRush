@@ -40,7 +40,6 @@ public class TransitionState {
 
 	// Player slot
 	private ImageView[] playerSlot = { UiConstant.firstPlayer, UiConstant.secondPlayer, UiConstant.thirdPlayer };
-	private int playerQuantity;
 	// Counter
 	private Label counter;
 	private Font counter_small_font;
@@ -54,8 +53,7 @@ public class TransitionState {
 	@Autowired
 	private SceneManager sceneManager;
 
-	public void showTransitionState(int playerQuantity, String announcedString, StackPane root) {
-		this.playerQuantity = playerQuantity;
+	public void showTransitionState(String announcedString, StackPane root) {
 
 		// Set the VBox's height ratios
 		double[] proportions = { 0.325, 0.35, 0.325 };
@@ -72,7 +70,7 @@ public class TransitionState {
 		// VBox for upperLayout
 		hBox = new HBox();
 		hBox.setAlignment(Pos.BOTTOM_CENTER);
-		for (int i = 0; i < playerQuantity; i++) {
+		for (int i = 0; i < UiConstant.playerQuantity; i++) {
 			hBox.getChildren().add(playerSlot[i]);
 		}
 		StackPane.setAlignment(hBox, Pos.BOTTOM_CENTER);
@@ -90,6 +88,8 @@ public class TransitionState {
 		timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
 			System.out.println(remain_counter);
 			if (remain_counter == -1) {
+				UiConstant.WIDTH=(int) overlayPane.getWidth();
+				UiConstant.HEIGHT=(int) overlayPane.getHeight();
 				sceneManager.switchToQuestion();
 			} else {
 				counter.setText(counterText[remain_counter]);
@@ -132,7 +132,7 @@ public class TransitionState {
 		root.getChildren().add(overlayPane);
 		responsive();
 	}
-
+	
 	private void responsive() {
 		overlayPane.widthProperty().addListener((observable, oldValue, newValue) -> {
 			double width = newValue.doubleValue();

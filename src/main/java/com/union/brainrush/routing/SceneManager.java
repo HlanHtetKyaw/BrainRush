@@ -1,6 +1,7 @@
 package com.union.brainrush.routing;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.union.brainrush.ui.First;
@@ -16,7 +17,7 @@ public class SceneManager {
 	private First first;
 	private Question question;
 	@Autowired
-	SceneManager(Home home,First first,Question question) {
+	SceneManager(Home home,First first,@Lazy Question question) {
 		this.home = home;
 		this.first = first;
 		this.question = question;
