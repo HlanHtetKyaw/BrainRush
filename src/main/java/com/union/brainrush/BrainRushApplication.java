@@ -6,6 +6,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import com.union.brainrush.routing.SceneManager;
+import com.union.brainrush.service.PortCommunication;
+import com.union.brainrush.service.SerialService;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -29,11 +31,12 @@ public class BrainRushApplication extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+		
 		// Initialize stage for SceneManager
 		SceneManager.initialize(primaryStage);
-
+		
 		// Getting SceneManager class from Spring MVC
-		springContext.getBean(SceneManager.class).switchToResult();
+		springContext.getBean(SceneManager.class).switchToHome();
 
 		// Title
 		primaryStage.setTitle("Brain Rush");
@@ -43,5 +46,6 @@ public class BrainRushApplication extends Application {
 	public static void main(String[] args) {
 		// Launch JavaFX application
 		launch(args);
+//		new PortCommunication();
 	}
 }
