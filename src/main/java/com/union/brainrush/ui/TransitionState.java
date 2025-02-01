@@ -5,8 +5,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.union.brainrush.routing.SceneManager;
+import com.union.brainrush.service.SerialService;
 
-import jakarta.annotation.PostConstruct;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
@@ -55,8 +55,9 @@ public class TransitionState {
 	
 	@Autowired
 	private Question questionState;
-
+	
 	public void showTransitionState(String announcedString, StackPane root, boolean question) {
+		
 		remain_counter = 1;
 		// Set the VBox's height ratios
 		double[] proportions = { 0.325, 0.35, 0.325 };

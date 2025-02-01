@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.union.brainrush.model.QuestionFormat;
+import com.union.brainrush.service.Player;
 import com.union.brainrush.service.QuestionService;
+import com.union.brainrush.service.SerialService;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -37,7 +39,7 @@ public class Question {
 	private StackPane qBottomLayout;
 	
 	// Button
-	private Button actionButton;
+	public static Button actionButton;
 	
 	// Player slot hBox
 	private HBox hBox;
@@ -68,11 +70,13 @@ public class Question {
 	QuestionService questions;
 	ArrayList<QuestionFormat> questionArray;
 	QuestionFormat question;
-	int questionPointer = 0;
+	public static int questionPointer = 0;
 	
 	@Autowired
 	@Lazy
 	TransitionState transitionState;
+	
+	SerialService serialService;
 	
 	@Autowired
 	public Question(QuestionService questions) {
@@ -81,7 +85,12 @@ public class Question {
 	public void questionState(boolean shuffle) {
 		questionArray = questions.getQuestions();
 		if(shuffle) {
+			serialService = new SerialService(); // Create Serial Service
+			serialService.start();
 			Collections.shuffle(questionArray);
+		}
+		if(questionPointer>10) {
+			serialService.stopService();
 		}
 		question = questionArray.get(questionPointer);
 		root = new StackPane();
@@ -93,8 +102,8 @@ public class Question {
 		// Button
 		actionButton = new Button();
 		actionButton.setOnAction(e->{
-			questionPointer++;
-			transitionState.showTransitionState("နောက်မေးခွန်းလာပါတော့မယ်", root,false);
+			Player.checkAnswer();
+			nextQuestion();
 		});
 		StackPane.setAlignment(actionButton, Pos.TOP_LEFT);
 		// VBox for upperLayout
@@ -106,6 +115,7 @@ public class Question {
 		StackPane.setAlignment(hBox, Pos.BOTTOM_CENTER);
 		qUpperLayout.getChildren().addAll(hBox,actionButton);
 		// label.setFont(label_small_font);
+		Player.rightAns = question.getRightAns();
 		String text = question.getQuestion();
 		textFlow = createTextFlow(text);
 		textFlow.getStyleClass().add("question_text_flow");
@@ -119,7 +129,6 @@ public class Question {
 		stackpane1 = new StackPane();
 		stackpane2 = new StackPane();
 		stackpane3 = new StackPane();
-		
 		
 		A = new Label("A");
 		B = new Label("B");
@@ -164,6 +173,10 @@ public class Question {
 		answerPane.maxHeightProperty().bind(scene.heightProperty().multiply(13).divide(20));
 		scene.getStylesheets().add("css/style.css");
 		positionPane();
+	}
+	public void nextQuestion() {
+		questionPointer++;
+		transitionState.showTransitionState("နောက်မေးခွန်းလာပါတော့မယ်", root,false);
 	}
 	private void positionPane() {
 		hBox.setAlignment(Pos.BOTTOM_CENTER);

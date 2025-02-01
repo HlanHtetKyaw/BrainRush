@@ -5,6 +5,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.union.brainrush.service.PortCommunication;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -57,6 +59,8 @@ public class Home {
 	@Autowired
 	@Lazy
 	TransitionState transitionState;
+	
+	PortCommunication pc = new PortCommunication();
 	
 	@Autowired
 	public Home() {
