@@ -33,7 +33,7 @@ public class BrainRushApplication extends Application {
 		SceneManager.initialize(primaryStage);
 
 		// Getting SceneManager class from Spring MVC
-		springContext.getBean(SceneManager.class).switchToHome();
+		springContext.getBean(SceneManager.class).switchToResult();
 
 		// Title
 		primaryStage.setTitle("Brain Rush");

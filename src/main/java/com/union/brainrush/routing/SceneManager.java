@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.union.brainrush.ui.First;
 import com.union.brainrush.ui.Home;
 import com.union.brainrush.ui.Question;
+import com.union.brainrush.ui.Result;
 
 import javafx.stage.Stage;
 
@@ -16,11 +17,13 @@ public class SceneManager {
 	private Home home;
 	private First first;
 	private Question question;
+	private Result result;
 	@Autowired
-	SceneManager(Home home,First first,@Lazy Question question) {
+	SceneManager(Home home,First first,@Lazy Question question,@Lazy Result result) {
 		this.home = home;
 		this.first = first;
 		this.question = question;
+		this.result = result;
 	}
 
 	public static void initialize(Stage primaryStage) {
@@ -35,6 +38,9 @@ public class SceneManager {
 	}
 	public void switchToQuestion() {
 		stage.setScene(question.getScene());
+	}
+	public void switchToResult() {
+		stage.setScene(result.getScene());
 	}
 }
 
