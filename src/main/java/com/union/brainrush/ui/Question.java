@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.union.brainrush.model.QuestionFormat;
+import com.union.brainrush.routing.SceneManager;
 import com.union.brainrush.service.Player;
 import com.union.brainrush.service.QuestionService;
 import com.union.brainrush.service.SerialService;
@@ -32,7 +33,7 @@ import javafx.scene.text.TextFlow;
 @Lazy
 public class Question {
 	Scene scene;
-	private StackPane root;
+	public static StackPane root;
 	private StackPane questionPane;
 	private StackPane answerPane;
 	private StackPane qUpperLayout;
@@ -76,6 +77,9 @@ public class Question {
 	@Lazy
 	TransitionState transitionState;
 	
+	@Autowired
+	SceneManager sceneManager;
+	
 	SerialService serialService;
 	
 	@Autowired
@@ -83,15 +87,14 @@ public class Question {
 		this.questions = questions;
 	}
 	public void questionState(boolean shuffle) {
+		serialService = new SerialService();
+		serialService.sendMessage("PC:{choice:True}");
+		serialService.start();
 		questionArray = questions.getQuestions();
 		if(shuffle) {
-			serialService = new SerialService(); // Create Serial Service
-			serialService.start();
 			Collections.shuffle(questionArray);
 		}
-		if(questionPointer>10) {
-			serialService.stopService();
-		}
+		
 		question = questionArray.get(questionPointer);
 		root = new StackPane();
 		
@@ -102,7 +105,6 @@ public class Question {
 		// Button
 		actionButton = new Button();
 		actionButton.setOnAction(e->{
-			Player.checkAnswer();
 			nextQuestion();
 		});
 		StackPane.setAlignment(actionButton, Pos.TOP_LEFT);
@@ -175,8 +177,21 @@ public class Question {
 		positionPane();
 	}
 	public void nextQuestion() {
+		System.out.println("Answer extract : "+Player.fPlayerAns);
+        System.out.println("Right answer : "+ Player.rightAns);
+        
+        if(Player.rightAns.equals(Player.fPlayerAns)) {
+        	Player.fPlayerMark++;
+        }
+        System.out.println("Current mark : "+ Player.fPlayerMark);
 		questionPointer++;
-		transitionState.showTransitionState("နောက်မေးခွန်းလာပါတော့မယ်", root,false);
+		if(questionPointer==10) {
+			serialService.stopService();
+			sceneManager.switchToResult();
+		}else {
+			serialService.stopService();
+			transitionState.showTransitionState("နောက်မေးခွန်းလာပါတော့မယ်", root,false);
+		}
 	}
 	private void positionPane() {
 		hBox.setAlignment(Pos.BOTTOM_CENTER);

@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 public class BrainRushApplication extends Application {
 
 	public ApplicationContext springContext;
-
 	@Override
 	public void init() {
 		// Initialize Spring context
@@ -31,7 +30,6 @@ public class BrainRushApplication extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		
 		// Initialize stage for SceneManager
 		SceneManager.initialize(primaryStage);
 		
