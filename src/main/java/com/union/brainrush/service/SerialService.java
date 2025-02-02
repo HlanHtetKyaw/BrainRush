@@ -38,7 +38,6 @@ public class SerialService extends Service<Void> {
 					outputStream = serialPort.getOutputStream();
 					reader = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 
-					// 🔹 Step 1: Send "PC:{choice:True}" immediately when the service starts
 					sendMessage("PC:{choice:True}");
 
 					System.out.println("Listening for messages...");
@@ -46,7 +45,7 @@ public class SerialService extends Service<Void> {
 
 					while (running && (line = reader.readLine()) != null) {
 						sendMessage("PC:{choice:True}");
-                        System.out.println("Received: " + line);
+						System.out.println("Received: " + line);
 
 						// Step 2: Process messages from Arduino
 						if (line.startsWith("AR:")) {
@@ -58,14 +57,14 @@ public class SerialService extends Service<Void> {
 								String fAnswer = extractValue(line, "f");
 
 								Player.fPlayerAns = fAnswer;
-
+								sendMessage("PC:{choice:False}");
 								running = false;
 								Platform.runLater(() -> {
 									Question.actionButton.fire();
 								});
 							}
 						} else {
-//                            System.out.println("Ignoring non-AR message.");
+							System.out.println("Ignoring non-AR message.");
 						}
 					}
 				} catch (Exception e) {
@@ -81,7 +80,7 @@ public class SerialService extends Service<Void> {
 			if (outputStream != null) {
 				outputStream.write((message + "\n").getBytes()); // Send data to Arduino
 				outputStream.flush();
-//                System.out.println("Sent: " + message);
+				System.out.println("Sent: " + message);
 			}
 		} catch (IOException e) {
 			System.err.println("Error sending message: " + e.getMessage());
@@ -90,6 +89,7 @@ public class SerialService extends Service<Void> {
 
 	public void stopService() {
 		running = false;
+		sendMessage("PC:{choice:False}"); // Tell Arduino to stop processing input
 		cancel();
 		try {
 			if (reader != null)

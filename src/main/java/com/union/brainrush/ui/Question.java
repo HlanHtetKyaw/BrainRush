@@ -88,7 +88,6 @@ public class Question {
 	}
 	public void questionState(boolean shuffle) {
 		serialService = new SerialService();
-		serialService.sendMessage("PC:{choice:True}");
 		serialService.start();
 		questionArray = questions.getQuestions();
 		if(shuffle) {
