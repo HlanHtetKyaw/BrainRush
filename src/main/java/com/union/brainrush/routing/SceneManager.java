@@ -30,7 +30,10 @@ public class SceneManager {
 		stage = primaryStage;
 	}
 
-	public void switchToHome() {
+	public void switchToHome(boolean check) {
+		if(check) {
+			home.root.getChildren().remove(home.root.getChildren().size() - 1);
+		}
 		stage.setScene(home.getScene());
 	}
 	public void switchToFirst() {

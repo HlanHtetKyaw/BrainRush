@@ -267,7 +267,6 @@ public class Result {
 				@Override
 				protected Void call() throws InterruptedException {
 					for (int i = 0; i <= players.get(0) * 10; i++) {
-						System.out.println("I am in");
 						updateProgress(i, 100);
 						currentMark3 = String.valueOf(i / 10);
 						if (index3 == 2) {

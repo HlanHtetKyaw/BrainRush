@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.union.brainrush.service.Player;
 import com.union.brainrush.service.PortCommunication;
 
 import javafx.geometry.Insets;
@@ -23,7 +24,7 @@ import javafx.scene.text.Font;
 @Component
 public class Home {
 	// Root and Scene
-	StackPane root;
+	public StackPane root;
 	Scene scene;
 
 	// Create the StackPane (rightmost part)
@@ -36,7 +37,9 @@ public class Home {
 	// Create the StackPane (leftmost part)
 	StackPane leftPane;
 	ImageView uniImage;
-
+	Button setting;
+	ImageView buttonImage;
+	
 	// Create top slot (titleImage)
 	ImageView titleImage;
 	StackPane imagelayout;
@@ -59,6 +62,10 @@ public class Home {
 	@Autowired
 	@Lazy
 	TransitionState transitionState;
+	
+	@Autowired
+	@Lazy
+	Setting settingWindow;
 	
 	PortCommunication pc = new PortCommunication();
 	
@@ -187,11 +194,22 @@ public class Home {
 		// Leftmost part
 		leftPane = new StackPane();
 		StackPane.setAlignment(leftPane, Pos.CENTER_LEFT);
-
+		setting = new Button();
+		
+		StackPane.setAlignment(setting, Pos.BOTTOM_LEFT);
+		StackPane.setMargin(setting, new Insets(50));
+		buttonImage = new ImageView(new Image("images/home/setting.png"));
+		buttonImage.setFitWidth(50);
+		buttonImage.setFitHeight(50);
+		setting.setOnAction(e->{
+			settingWindow.showSetting(root);
+		});
+		setting.setGraphic(buttonImage);
+		setting.setMaxSize(50, 50);
+		setting.getStyleClass().add("bottom_format");
 		// Create uni image
 		uniImage = new ImageView(new Image("images/home/uniImage.png"));
-
-		leftPane.getChildren().add(uniImage);
+		leftPane.getChildren().addAll(uniImage,setting);
 
 	}
 
@@ -204,7 +222,16 @@ public class Home {
 		uniImage.setFitWidth(120);
 	}
 	private void buttonsAction(int mode) {
-		UiConstant.playerQuantity = mode;
+		Player.playerQuantity = mode;
+		if(mode==1) {
+			Player.sentMessage="PC:{choice:True1}";
+		}
+		if(mode==2) {
+			Player.sentMessage="PC:{choice:True2}";
+		}
+		if(mode==3) {
+			Player.sentMessage="PC:{choice:True3}";
+		}
 	    transitionState.showTransitionState("အဆင်သင့်ပြင်ထားနော်",root,true);
 	}
 

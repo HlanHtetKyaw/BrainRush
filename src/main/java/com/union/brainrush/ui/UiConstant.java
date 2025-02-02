@@ -7,9 +7,14 @@ public class UiConstant {
     public static int WIDTH = 1024;
     public static int HEIGHT = 768;
     public static final String NOTO_REGULAR_PATH = "/font/NotoSerifMyanmar-Regular.ttf";
-    public static final ImageView firstPlayer = new ImageView(new Image("images/player/firstPlayer.png"));
-    public static final ImageView secondPlayer = new ImageView(new Image("images/player/secondPlayer.png"));
-    public static final ImageView thirdPlayer = new ImageView(new Image("images/player/thirdPlayer.png"));
-    public static int playerQuantity = 0;
+    public static final Image firstPlayer = new Image("images/player/firstPlayer.png");
+    public static final Image secondPlayer = new Image("images/player/secondPlayer.png");
+    public static final Image thirdPlayer = new Image("images/player/thirdPlayer.png");
+    public static final ImageView fpV = new ImageView(firstPlayer);
+    public static final ImageView spV = new ImageView(secondPlayer);
+    public static final ImageView tpV = new ImageView(thirdPlayer);
+    public static final Image firstPlayerConfirm = new Image("images/player/firstPlayerC.png");
+    public static final Image secondPlayerConfirm = new Image("images/player/secondPlayerC.png");
+    public static final Image thirdPlayerConfirm = new Image("images/player/thirdPlayerC.png");
 }
 
