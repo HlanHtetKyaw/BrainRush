@@ -291,7 +291,6 @@ public class Result {
 						}
 						tImageSlot.getChildren().clear();
 						tImageSlot.getChildren().add(imageFinal[Player.playerMark().get(list.get(2).getKey())]);
-
 					});
 					return null;
 				}
