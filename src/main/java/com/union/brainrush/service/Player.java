@@ -8,11 +8,11 @@ public class Player {
 	public static int tPlayerMark = 0;
 	public static String fPlayerAns;
 	public static String rightAns;
-	public static HashMap<Integer, Integer> playerMark(){
-		 HashMap<Integer, Integer> rankMap = new HashMap<>();
-	        rankMap.put(fPlayerMark,0);
-	        rankMap.put(sPlayerMark,1);
-	        rankMap.put(tPlayerMark,2);
+	public static HashMap<String, Integer> playerMark(){
+		 HashMap<String, Integer> rankMap = new HashMap<>();
+	        rankMap.put("fPlayerMark",0);
+	        rankMap.put("sPlayerMark",1);
+	        rankMap.put("tPlayerMark",2);
 		return rankMap;
 	}
 }

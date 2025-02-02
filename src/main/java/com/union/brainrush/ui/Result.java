@@ -2,9 +2,11 @@ package com.union.brainrush.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -26,7 +28,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 @Component
 @Lazy
@@ -173,7 +174,16 @@ public class Result {
 		ImageView sImaget = new ImageView(new Image("images/result/newton.png"));
 		ImageView tImaget = new ImageView(new Image("images/result/leo.png"));
 		ImageView[] timageViews = { tImaget, fImaget, sImaget };
-		// Create a list of all indices
+
+		HashMap<String, Integer> playerMarks = new HashMap<>();
+		playerMarks.put("fPlayerMark", Player.fPlayerMark);
+		playerMarks.put("sPlayerMark", Player.sPlayerMark);
+		playerMarks.put("tPlayerMark", Player.tPlayerMark);
+
+		List<Map.Entry<String, Integer>> list = new ArrayList<>(playerMarks.entrySet());
+
+		list.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+
 		List<Integer> indices = new ArrayList<>();
 		for (int i = 0; i < 3; i++) {
 			indices.add(i);
@@ -190,7 +200,7 @@ public class Result {
 						updateProgress(i, 100);
 						currentMark1 = String.valueOf(i / 10);
 						// Calculate the current index based on the progress (0, 1, 2)
-//                            	int currentIndex = (int)(i / 33.33);  // Dividing by 33.33 to divide progress into 3 steps
+//                         int currentIndex = (int)(i / 33.33);  // Dividing by 33.33 to divide progress into 3 steps
 						if (index1 == 2) {
 							index1 = 0;
 						} else {
@@ -203,24 +213,17 @@ public class Result {
 							fImageSlot.getChildren().clear();
 							fImageSlot.getChildren().add(fimageViews[index1]);
 						});
-
 						Thread.sleep(50); // Simulate work
 					}
 					Platform.runLater(() -> {
+						labelText(fLabel);
 						fLabel.setText(fth);
-						labelText(fLabel, players, fImageSlot, "F_S_Slot");
-						fImageSlot.getChildren().clear();
-						// 2 3
-						if (players.getFirst() == players.getLast()) {
-							fImageSlot.getChildren().clear();
-							fImageSlot.getChildren().add(imageFinal[0]);
-						} else if (players.get(2) == players.get(1)) {
-							fImageSlot.getChildren().clear();
-							fImageSlot.getChildren().add(imageFinal[indices.get(1)]);
-						} else {
-							int index = Player.playerMark().get(players.get(2));
-							fImageSlot.getChildren().add(imageFinal[index]);
+						if(list.get(0).getValue()==list.get(1).getValue() || list.get(0).getValue()==list.get(2).getValue()) {
+							fLabel.setText(draw);
 						}
+//						labelText(fLabel, players, fImageSlot, "F_S_Slot");
+						fImageSlot.getChildren().clear();
+						fImageSlot.getChildren().add(imageFinal[Player.playerMark().get(list.get(0).getKey())]);
 
 					});
 					return null;
@@ -249,34 +252,13 @@ public class Result {
 						Thread.sleep(50); // Simulate work
 					}
 					Platform.runLater(() -> {
+						labelText(sLabel);
 						sLabel.setText(snd);
-						labelText(sLabel, players, sImageSlot, "F_S_Slot");
-						sImageSlot.getChildren().clear();
-						// players 2,3
-						if (players.getFirst() == players.getLast()) {
-							sImageSlot.getChildren().clear();
-							sImageSlot.getChildren().add(imageFinal[1]);
-						} else if (players.get(2) == players.get(1)) {
-							sImageSlot.getChildren().clear();
-							sImageSlot.getChildren().add(imageFinal[indices.get(0)]);
-						} else if (players.getFirst() < players.getLast() && players.getFirst() == players.get(1)
-								|| (players.getFirst() != players.get(1) && removedIndex != 2)) {
-							int lIndex = Player.playerMark().get(players.getLast());//0
-//							int checkIndex = lIndex - removedIndex;// r 1
-//							System.out.println(removedIndex);
-//							int index = (checkIndex == 2) ? 1 : 0;// i
-							if(lIndex==0) {
-								sImageSlot.getChildren().add(imageFinal[1]);
-							}else {
-								sImageSlot.getChildren().add(imageFinal[0]);
-							}
-							
-						} else {
-							int index = Player.playerMark().get(players.get(1));
-							indices.remove(index);
-							sImageSlot.getChildren().add(imageFinal[index]);
+						if(list.get(1).getValue()==list.get(0).getValue() || list.get(1).getValue()==list.get(2).getValue()) {
+							sLabel.setText(draw);
 						}
-
+						sImageSlot.getChildren().clear();
+						sImageSlot.getChildren().add(imageFinal[Player.playerMark().get(list.get(1).getKey())]);
 					});
 					return null;
 				}
@@ -285,6 +267,7 @@ public class Result {
 				@Override
 				protected Void call() throws InterruptedException {
 					for (int i = 0; i <= players.get(0) * 10; i++) {
+						System.out.println("I am in");
 						updateProgress(i, 100);
 						currentMark3 = String.valueOf(i / 10);
 						if (index3 == 2) {
@@ -301,18 +284,14 @@ public class Result {
 						Thread.sleep(50); // Simulate work
 					}
 					Platform.runLater(() -> {
+						labelText(tLabel);
 						tLabel.setText(trd);
-						labelText(tLabel, players, tImageSlot, "T_Slot");
-						if (players.getFirst() == players.getLast()) {
-							tImageSlot.getChildren().clear();
-							tImageSlot.getChildren().add(imageFinal[2]);
-						} else {
-							int index = Player.playerMark().get(players.get(0));
-							removedIndex = index;
-							indices.remove(index);
-							tImageSlot.getChildren().clear();
-							tImageSlot.getChildren().add(imageFinal[index]);
+						if(list.get(2).getValue()==list.get(0).getValue() || list.get(2).getValue()==list.get(1).getValue()) {
+							tLabel.setText(draw);
 						}
+						tImageSlot.getChildren().clear();
+						tImageSlot.getChildren().add(imageFinal[Player.playerMark().get(list.get(2).getKey())]);
+
 					});
 					return null;
 				}
@@ -332,18 +311,10 @@ public class Result {
 		}
 	}
 
-	private void labelText(Label label, List<Integer> players, StackPane imageSlot, String pointer) {
+	private void labelText(Label label) {
 		label_small_font = Font.loadFont(getClass().getResourceAsStream(UiConstant.NOTO_REGULAR_PATH), 25);
 		label.setFont(label_small_font);
 		label.setTextFill(Color.WHITE);
-		if (players.getFirst() == players.getLast()) {
-			label.setText(draw);
-		}
-		if (pointer == "F_S_Slot") {
-			if (players.get(2) == players.get(1)) {
-				label.setText(draw);
-			}
-		}
 	}
 
 	private void responsive() {
