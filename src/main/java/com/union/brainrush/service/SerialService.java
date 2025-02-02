@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
-import com.union.brainrush.BrainRushApplication;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+
 import com.union.brainrush.ui.Question;
+import com.union.brainrush.ui.Setting;
+import com.union.brainrush.ui.UiConstant;
 
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -19,7 +23,7 @@ public class SerialService extends Service<Void> {
 	private BufferedReader reader;
 	private OutputStream outputStream;
 	public static boolean running = true;
-
+	
 	@Override
 	protected Task<Void> createTask() {
 		return new Task<>() {
@@ -27,7 +31,12 @@ public class SerialService extends Service<Void> {
 			protected Void call() {
 				try {
 					// Replace with your actual port name
-					String portName = "COM3";
+					String portName = null;
+					try {
+						portName = Setting.comboBox.getValue();
+					}catch(NullPointerException e) {
+						System.out.println("Set COM value in Setting");
+					}
 					CommPortIdentifier portId = CommPortIdentifier.getPortIdentifier(portName);
 
 					// Open the port
@@ -37,14 +46,13 @@ public class SerialService extends Service<Void> {
 
 					outputStream = serialPort.getOutputStream();
 					reader = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-
-					sendMessage("PC:{choice:True}");
+					sendMessage(Player.sentMessage);
 
 					System.out.println("Listening for messages...");
 					String line;
 
 					while (running && (line = reader.readLine()) != null) {
-						sendMessage("PC:{choice:True}");
+//                    	sendMessage(Player.sentMessage);
 						System.out.println("Received: " + line);
 
 						// Step 2: Process messages from Arduino
@@ -52,19 +60,65 @@ public class SerialService extends Service<Void> {
 							String fValue = extractValue(line, "f");
 							String sValue = extractValue(line, "s");
 							String tValue = extractValue(line, "t");
+							String counterValue = extractValue(line, "c");
+							String playerQuantity = String.valueOf(Player.playerQuantity);
 
-							if (!fValue.contains("0")) {
-								String fAnswer = extractValue(line, "f");
-
-								Player.fPlayerAns = fAnswer;
-								sendMessage("PC:{choice:False}");
-								running = false;
-								Platform.runLater(() -> {
-									Question.actionButton.fire();
-								});
+							if (playerQuantity.equals("1")) {
+								if (fValue.length()!=0) {
+									String fAnswer = fValue;
+									Player.fPlayerAns = fAnswer;
+									Question.playerSlot[0].setImage(UiConstant.firstPlayerConfirm);
+									sendMessage("PC:{choice:False}");
+									running = false;
+									Platform.runLater(() -> {
+										Question.actionButton.fire();
+									});
+								}
+							} else if (playerQuantity.equals("2")) {
+								if (fValue.length()!=0) {
+									String fAnswer = fValue;
+									Player.fPlayerAns = fAnswer;
+									Question.playerSlot[0].setImage(UiConstant.firstPlayerConfirm);
+								}
+								if (sValue.length()!=0) {
+									String sAnswer = sValue;
+									Player.sPlayerAns = sAnswer;
+									Question.playerSlot[1].setImage(UiConstant.secondPlayerConfirm);
+								}
+								if (counterValue.equals("2")) {
+									sendMessage("PC:{choice:False}");
+									running = false;
+									Platform.runLater(() -> {
+										Question.actionButton.fire();
+									});
+								}
+							} else if (playerQuantity.equals("3")) {
+								if (fValue.length()!=0) {
+									String fAnswer = fValue;
+									Player.fPlayerAns = fAnswer;
+									Question.playerSlot[0].setImage(UiConstant.firstPlayerConfirm);
+								}
+								if (sValue.length()!=0) {
+									String sAnswer = sValue;
+									Player.sPlayerAns = sAnswer;
+									Question.playerSlot[1].setImage(UiConstant.secondPlayerConfirm);
+								}
+								if (tValue.length()!=0) {
+									String tAnswer = tValue;
+									Question.playerSlot[2].setImage(UiConstant.thirdPlayerConfirm);
+									Player.tPlayerAns = tAnswer;
+								}
+								if (counterValue.equals("3")) {
+									sendMessage("PC:{choice:False}");
+									running = false;
+									Platform.runLater(() -> {
+										Question.actionButton.fire();
+									});
+								}
 							}
+
 						} else {
-							System.out.println("Ignoring non-AR message.");
+//							System.out.println("Ignoring non-AR message.");
 						}
 					}
 				} catch (Exception e) {

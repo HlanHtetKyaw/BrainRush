@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-import com.union.brainrush.BrainRushApplication;
 import com.union.brainrush.routing.SceneManager;
+import com.union.brainrush.service.Player;
 import com.union.brainrush.service.SerialService;
 
 import javafx.animation.KeyFrame;
@@ -40,7 +40,7 @@ public class TransitionState {
 	private HBox hBox;
 
 	// Player slot
-	private ImageView[] playerSlot = { UiConstant.firstPlayer, UiConstant.secondPlayer, UiConstant.thirdPlayer };
+	private ImageView[] playerSlot = { UiConstant.fpV ,UiConstant.spV, UiConstant.tpV };
 	// Counter
 	private Label counter;
 	private Font counter_small_font;
@@ -74,7 +74,7 @@ public class TransitionState {
 		// VBox for upperLayout
 		hBox = new HBox();
 		hBox.setAlignment(Pos.BOTTOM_CENTER);
-		for (int i = 0; i < UiConstant.playerQuantity; i++) {
+		for (int i = 0; i < Player.playerQuantity; i++) {
 			hBox.getChildren().add(playerSlot[i]);
 		}
 		StackPane.setAlignment(hBox, Pos.BOTTOM_CENTER);
