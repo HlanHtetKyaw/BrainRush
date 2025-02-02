@@ -261,11 +261,16 @@ public class Result {
 							sImageSlot.getChildren().add(imageFinal[indices.get(0)]);
 						} else if (players.getFirst() < players.getLast() && players.getFirst() == players.get(1)
 								|| (players.getFirst() != players.get(1) && removedIndex != 2)) {
-							int lIndex = Player.playerMark().get(players.getLast());
-							int checkIndex = lIndex - removedIndex;// r 1
-							System.out.println(removedIndex);
-							int index = (checkIndex == 2) ? 1 : 0;// i
-							sImageSlot.getChildren().add(imageFinal[index]);
+							int lIndex = Player.playerMark().get(players.getLast());//0
+//							int checkIndex = lIndex - removedIndex;// r 1
+//							System.out.println(removedIndex);
+//							int index = (checkIndex == 2) ? 1 : 0;// i
+							if(lIndex==0) {
+								sImageSlot.getChildren().add(imageFinal[1]);
+							}else {
+								sImageSlot.getChildren().add(imageFinal[0]);
+							}
+							
 						} else {
 							int index = Player.playerMark().get(players.get(1));
 							indices.remove(index);

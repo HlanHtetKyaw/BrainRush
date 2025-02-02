@@ -15,9 +15,4 @@ public class Player {
 	        rankMap.put(tPlayerMark,2);
 		return rankMap;
 	}
-	public static void checkAnswer() {
-		if(rightAns==fPlayerAns) {
-			fPlayerMark++;
-		}
-	}
 }

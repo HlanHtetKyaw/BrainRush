@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
+import com.union.brainrush.BrainRushApplication;
 import com.union.brainrush.routing.SceneManager;
 import com.union.brainrush.service.SerialService;
 
@@ -55,9 +56,8 @@ public class TransitionState {
 	
 	@Autowired
 	private Question questionState;
-	
+
 	public void showTransitionState(String announcedString, StackPane root, boolean question) {
-		
 		remain_counter = 1;
 		// Set the VBox's height ratios
 		double[] proportions = { 0.325, 0.35, 0.325 };
@@ -95,9 +95,11 @@ public class TransitionState {
 				UiConstant.WIDTH = (int) overlayPane.getWidth();
 				UiConstant.HEIGHT = (int) overlayPane.getHeight();
 				if (question) {
+					SerialService.running=true;
 					questionState.questionState(true);
 					sceneManager.switchToQuestion();
 				} else {
+					SerialService.running=true;
 					questionState.questionState(false);
 					sceneManager.switchToQuestion();
 				}
