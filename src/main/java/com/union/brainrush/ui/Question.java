@@ -1,7 +1,10 @@
 package com.union.brainrush.ui;
 
+import java.io.Serial;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,9 @@ public class Question {
 
 	Scene scene;
 	public static StackPane root;
+	private String[] backgroundColor = {"#ed801b","#004aad","#ebcd35","#b64747","#3fa278",
+										"#f7c89f","#4b6240","#d48e38","#623f31","#684f9b"};
+	private List<String> bgColor = Arrays.asList(backgroundColor);
 	private StackPane questionPane;
 	private StackPane answerPane;
 	private StackPane qUpperLayout;
@@ -92,12 +98,14 @@ public class Question {
 		this.questions = questions;
 	}
 
-	public void questionState(boolean shuffle) {
+	public void questionState(boolean shuffle,double width,double height) {
 		serialService = new SerialService();
 		serialService.start();
 		questionArray = questions.getQuestions();
+		
 		if (shuffle) {
 			Collections.shuffle(questionArray);
+			Collections.shuffle(bgColor);
 		}
 
 		question = questionArray.get(questionPointer);
@@ -185,10 +193,10 @@ public class Question {
 
 		answerPane.getChildren().add(vBox);
 
-		root.setBackground(Background.fill(Color.ORANGE));
+		String styleColor = "-fx-background-color:"+bgColor.get(questionPointer)+";";
+		root.setStyle(styleColor);
 		root.getChildren().addAll(questionPane, answerPane);
-		scene = new Scene(root, UiConstant.WIDTH, UiConstant.HEIGHT);
-		System.out.println(scene.getWidth());
+		scene = new Scene(root,width,height);
 		questionPane.maxWidthProperty().bind(scene.widthProperty().multiply(6).divide(10));
 		answerPane.maxWidthProperty().bind(scene.widthProperty().multiply(4).divide(10));
 		qUpperLayout.maxHeightProperty().bind(scene.heightProperty().multiply(6).divide(20));
@@ -215,7 +223,7 @@ public class Question {
 		System.out.println("Second player answer : " + Player.sPlayerAns);
 		System.out.println("Third player answer : " + Player.tPlayerAns);
 		System.out.println("Right answer : " + Player.rightAns);
-
+		System.out.println("----------------------");
 		if (Player.rightAns.equals(Player.fPlayerAns)) {
 			Player.fPlayerMark++;
 		}
@@ -225,16 +233,20 @@ public class Question {
 		if (Player.rightAns.equals(Player.tPlayerAns)) {
 			Player.tPlayerMark++;
 		}
+		System.out.println("----------------------");
 		System.out.println("Question " + questionPointer + " out of " + totalQuestion);
 		System.out.println("first Current mark : " + Player.fPlayerMark);
 		System.out.println("second Current mark : " + Player.sPlayerMark);
 		System.out.println("third Current mark : " + Player.tPlayerMark);
+		System.out.println("----------------------");
 	}
 
 	private void switchBackToHome() {
 		sceneManager.switchToHome(true);
 		questionPointer = 0;
 		Player.resetPlayerMark();
+		serialService.sendMessage("");
+		serialService.stopService();
 	}
 
 	private void positionPane() {

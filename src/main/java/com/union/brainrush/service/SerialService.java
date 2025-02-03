@@ -23,7 +23,7 @@ public class SerialService extends Service<Void> {
 	private BufferedReader reader;
 	private OutputStream outputStream;
 	public static boolean running = true;
-	
+	String lastLine = "";
 	@Override
 	protected Task<Void> createTask() {
 		return new Task<>() {
@@ -50,10 +50,10 @@ public class SerialService extends Service<Void> {
 
 					System.out.println("Listening for messages...");
 					String line;
-
+					
 					while (running && (line = reader.readLine()) != null) {
 //                    	sendMessage(Player.sentMessage);
-						System.out.println("Received: " + line);
+						
 
 						// Step 2: Process messages from Arduino
 						if (line.startsWith("AR:")) {
@@ -62,9 +62,10 @@ public class SerialService extends Service<Void> {
 							String tValue = extractValue(line, "t");
 							String counterValue = extractValue(line, "c");
 							String playerQuantity = String.valueOf(Player.playerQuantity);
-
+							printOutPut(line, lastLine);
 							if (playerQuantity.equals("1")) {
 								if (fValue.length()!=0) {
+									
 									String fAnswer = fValue;
 									Player.fPlayerAns = fAnswer;
 									Question.playerSlot[0].setImage(UiConstant.firstPlayerConfirm);
@@ -76,6 +77,7 @@ public class SerialService extends Service<Void> {
 								}
 							} else if (playerQuantity.equals("2")) {
 								if (fValue.length()!=0) {
+									
 									String fAnswer = fValue;
 									Player.fPlayerAns = fAnswer;
 									Question.playerSlot[0].setImage(UiConstant.firstPlayerConfirm);
@@ -128,7 +130,12 @@ public class SerialService extends Service<Void> {
 			}
 		};
 	}
-
+	private void printOutPut(String line,String lastLine) {
+		if (!line.equals(lastLine)) { // Print only if different from the last line
+	        System.out.println("Received: " + line);
+	        lastLine = line; // Update last received line
+	    }
+	}
 	public void sendMessage(String message) {
 		try {
 			if (outputStream != null) {

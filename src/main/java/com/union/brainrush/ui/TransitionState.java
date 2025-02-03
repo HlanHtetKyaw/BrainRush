@@ -40,7 +40,7 @@ public class TransitionState {
 	private HBox hBox;
 
 	// Player slot
-	private ImageView[] playerSlot = { UiConstant.fpV ,UiConstant.spV, UiConstant.tpV };
+	private ImageView[] playerSlot = { UiConstant.fpV, UiConstant.spV, UiConstant.tpV };
 	// Counter
 	private Label counter;
 	private Font counter_small_font;
@@ -53,7 +53,7 @@ public class TransitionState {
 
 	@Autowired
 	private SceneManager sceneManager;
-	
+
 	@Autowired
 	private Question questionState;
 
@@ -90,17 +90,16 @@ public class TransitionState {
 		// Countdown logic
 		String[] counterText = { "၁", "၂" };
 		timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-			System.out.println(remain_counter);
 			if (remain_counter == -1) {
 				UiConstant.WIDTH = (int) overlayPane.getWidth();
 				UiConstant.HEIGHT = (int) overlayPane.getHeight();
 				if (question) {
-					SerialService.running=true;
-					questionState.questionState(true);
+					SerialService.running = true;
+					questionState.questionState(true,overlayPane.getWidth(),overlayPane.getHeight());
 					sceneManager.switchToQuestion();
 				} else {
-					SerialService.running=true;
-					questionState.questionState(false);
+					SerialService.running = true;
+					questionState.questionState(false,overlayPane.getWidth(),overlayPane.getHeight());
 					sceneManager.switchToQuestion();
 				}
 			} else {
